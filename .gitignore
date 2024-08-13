@@ -67,3 +67,4 @@ FlashBackSDK/ScaffoldingReadMe.txt
 FlashBackSDK/[Pp]ackages/*
 !**/[Pp]ackage[Cc]ache/*
 /Library
+/Logs

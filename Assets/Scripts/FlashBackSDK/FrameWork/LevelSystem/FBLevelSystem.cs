@@ -32,7 +32,7 @@ public class FBLevelSystem : FBGameSystem
     /// <param name="sceneName"> Scene name </param>
     public void LoadScene(string sceneName)
     {
-        // ³¡¾°¼ÓÔØ¿ªÊ¼
+        // å¼€å§‹åŠ è½½åœºæ™¯
         FBMainGame.Game.EventSystem.PostEvent(GameEvent.Event.SCENE_LOAD_BEGIN);
         StartCoroutine(loadSceneAsync(sceneName));
     }

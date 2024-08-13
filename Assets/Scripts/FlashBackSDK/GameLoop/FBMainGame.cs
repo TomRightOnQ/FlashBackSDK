@@ -30,10 +30,10 @@ public class FBMainGame : MonoBehaviour
     [SerializeField, ReadOnly] private FBLevelSystem FBLevelSystem;
     public FBLevelSystem LevelSystem => FBLevelSystem;
 
-    /*
+
     [SerializeField, ReadOnly] private FBResourceManager FBResourceManager;
-    public FBResourceManager => ResourceManager;
-     */
+    public FBResourceManager ResourceManager => FBResourceManager;
+
 
     private void Awake()
     {
@@ -61,37 +61,35 @@ public class FBMainGame : MonoBehaviour
         // Init Sequence
         FBDebug.Instance.FBMainLog("STEP I: Create ALL FBGameSystems");
 
-        // 1. FBObjectManager
-        GameObject managerGameObject_0 = new GameObject("FBObjectManager");
-        FBObjectManager = managerGameObject_0.AddComponent<FBObjectManager>();
+        // 1. FBResourceManager
+        GameObject O_FBResourceManager = new GameObject("FBResourceManager");
+        FBResourceManager = O_FBResourceManager.AddComponent<FBResourceManager>();
+        gameSystemDictionary["FBResourceManager"] = FBResourceManager;
+        FBResourceManager.OnSystemCreate();
+
+        // 2. FBObjectManager
+        GameObject O_FBObjectManager = new GameObject("FBObjectManager");
+        FBObjectManager = O_FBObjectManager.AddComponent<FBObjectManager>();
         gameSystemDictionary["FBObjectManager"] = FBObjectManager;
         FBObjectManager.OnSystemCreate();
 
-        // 2. FBEventSystem
-        GameObject managerGameObject_1 = new GameObject("FBEventSystem");
-        FBEventSystem = managerGameObject_1.AddComponent<FBEventSystem>();
+        // 3. FBEventSystem
+        GameObject O_FBEventSystem = new GameObject("FBEventSystem");
+        FBEventSystem = O_FBEventSystem.AddComponent<FBEventSystem>();
         gameSystemDictionary["FBEventSystem"] = FBEventSystem;
         FBEventSystem.OnSystemCreate();
 
-        // 3. FBUIManager
-        GameObject managerGameObject_2 = new GameObject("FBUIManager");
-        FBUIManager = managerGameObject_2.AddComponent<FBUIManager>();
+        // 4. FBUIManager
+        GameObject O_FBUIManager = new GameObject("FBUIManager");
+        FBUIManager = O_FBUIManager.AddComponent<FBUIManager>();
         gameSystemDictionary["FBUIManager"] = FBUIManager;
         FBUIManager.OnSystemCreate();
 
-        // 4. FBLevelSystem
-        GameObject managerGameObject_3 = new GameObject("FBLevelSystem");
-        FBLevelSystem = managerGameObject_3.AddComponent<FBLevelSystem>();
+        // 5. FBLevelSystem
+        GameObject O_FBLevelSystem = new GameObject("FBLevelSystem");
+        FBLevelSystem = O_FBLevelSystem.AddComponent<FBLevelSystem>();
         gameSystemDictionary["FBLevelSystem"] = FBLevelSystem;
         FBLevelSystem.OnSystemCreate();
-
-        // 5. FBResourceManager
-        /*
-        GameObject managerGameObject_4 = new GameObject("FBResourceManager");
-        FBResourceManager = managerGameObject_4.AddComponent<FBResourceManager>();
-        gameSystemDictionary["FBResourceManager"] = FBResourceManager;
-        FBResourceManager.OnSystemCreate();
-        */
 
         bSytemsInited = true;
         FBDebug.Instance.FBMainLog("STEP I COMPLETE");

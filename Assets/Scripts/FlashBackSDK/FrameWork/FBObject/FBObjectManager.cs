@@ -63,15 +63,34 @@ public class FBObjectManager : FBGameSystem
     /// <param name="prefabName"> Prefab Name </param>
     /// <param name="position"> The start position </param>
     /// <param name="rotation"> The start rotation </param>
-    public void Instantiate(string prefabName, Vector3 position, Quaternion rotation)
+    public GameObject Instantiate(string prefabName, Vector3 position, Quaternion rotation)
     {
         /// TODO: Do pooling check here in the future
-        /// TODO: Load with the prefab name and get the gameobject reference, then route
-        /// to native Instantiate(GameObject prefab, Vector3 position, Quaternion rotation)
 
+        // Load with the prefab name and get the gameobject reference, then route
+        // to native Instantiate(GameObject prefab, Vector3 position, Quaternion rotation)
+
+        // Get Path
+        string prefabPath = PrefabConfig.GetPath(prefabName);
+
+        GameObject objectReference = FBMainGame.Game.ResourceManager.LoadObject(prefabPath);
+        if (objectReference == null)
+        {
+            return null;
+        }
+
+        GameObject newObject = GameObject.Instantiate(objectReference, position, rotation);
+        // Check if its an FBObject
+        FBObject FBObjectComponent = newObject.GetComponent<FBObject>();
+        if (FBObjectComponent != null)
+        {
+            // Assgin UUID
+            RegisterObject(FBObjectComponent);
+        }
+        return newObject;
     }
 
-    public void Instantiate(GameObject prefab, Vector3 position, Quaternion rotation)
+    public GameObject Instantiate(GameObject prefab, Vector3 position, Quaternion rotation)
     {
         /// TODO: Do pooling check here in the future
 
@@ -83,16 +102,17 @@ public class FBObjectManager : FBGameSystem
             // Assgin UUID
             RegisterObject(FBObjectComponent);
         }
+        return newObject;
     }
 
-    public void Instantiate(string prefabName)
+    public GameObject Instantiate(string prefabName)
     {
-        this.Instantiate(prefabName, Vector3.zero, Quaternion.identity);
+        return this.Instantiate(prefabName, Vector3.zero, Quaternion.identity);
     }
 
-    public void Instantiate(GameObject prefab)
+    public GameObject Instantiate(GameObject prefab)
     {
-        this.Instantiate(prefab, Vector3.zero, Quaternion.identity);
+        return this.Instantiate(prefab, Vector3.zero, Quaternion.identity);
     }
 
     // Get Method
@@ -168,7 +188,7 @@ public class FBObjectManager : FBGameSystem
     public void RegisterObject(FBObject targetObject)
     {
         // Check if the object is already recorded
-        if (!objectSet.Contains(targetObject) || targetObject.ObjectUUID >= 0)
+        if (objectSet.Contains(targetObject) || targetObject.ObjectUUID >= 0)
         {
             return;
         }

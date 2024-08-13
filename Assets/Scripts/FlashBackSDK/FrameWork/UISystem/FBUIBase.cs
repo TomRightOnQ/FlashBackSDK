@@ -8,8 +8,8 @@ using UnityEngine;
 public class FBUIBase : FBObject
 {
     // Whether the UI has been opened once
-    [SerializeField, ReadOnly] public bool bOpenedOnce = false;
-    public bool IsOpened => bOpenedOnce;
+    [SerializeField, ReadOnly] public bool bHasOpenedOnce = false;
+    public bool HasOpened => bHasOpenedOnce;
     [SerializeField, ReadOnly] public bool bShowing = false;
     public bool IsShowing => bShowing;
 
@@ -19,7 +19,7 @@ public class FBUIBase : FBObject
     /// </summary>
     public virtual void Init()
     {
-        
+        this.tag = "UI";
     }
 
     /// <summary>

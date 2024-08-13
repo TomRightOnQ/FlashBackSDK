@@ -9,7 +9,7 @@ using UnityEngine;
 public class FBEventSystem : FBGameSystem
 {
     // Dictionary to hold all the delegates, keyed by event type.
-    private Dictionary<GameEvent.Event, System.Action> eventDictionary;
+    private Dictionary<GameEvent.Event, System.Action> eventDictionary = new Dictionary<GameEvent.Event, System.Action>();
 
     public override void OnSystemInit()
     {

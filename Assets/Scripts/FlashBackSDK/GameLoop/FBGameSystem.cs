@@ -8,28 +8,15 @@ using UnityEngine;
 
 public class FBGameSystem: MonoBehaviour 
 {
-    // Static instance to refer itself
-    private static FBGameSystem instance;
-    public static FBGameSystem Instance => instance;
-
     /// Life Cycle
     /// <summary>
     /// The begining code of the system
     /// All systems are created in the main game loop
-    /// Do singleton check here
     /// </summary>
     public virtual void OnSystemCreate()
     {
-        if (instance == null)
-        {
-            gameObject.tag = "Manager";
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else if (instance != this)
-        {
-            Destroy(gameObject);
-        }
+        this.tag = "Manager";
+        DontDestroyOnLoad(this);
     }
 
     /// <summary>

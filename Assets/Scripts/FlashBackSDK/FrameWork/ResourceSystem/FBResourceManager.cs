@@ -31,6 +31,10 @@ public class FBResourceManager : FBGameSystem
     /// <returns> Prefab reference </returns>
     public GameObject LoadObject(string resourcePath)
     {
+        if (resourcePath == "None")
+        {
+            return null;
+        }
         GameObject OutObjectRef = Resources.Load<GameObject>(resourcePath);
         if (OutObjectRef != null)
         {
@@ -38,7 +42,7 @@ public class FBResourceManager : FBGameSystem
         }
         else
         {
-            FBDebug.Instance.FBLogError(string.Format("Unable to get GameObject at {resourcePath}", resourcePath), gameObject);
+            FBDebug.Instance.FBLogError(string.Format("Unable to get GameObject at {0}", resourcePath), gameObject);
             return null;
         }
     }
@@ -58,7 +62,7 @@ public class FBResourceManager : FBGameSystem
         }
         else
         {
-            FBDebug.Instance.FBLogError(string.Format("Unable to get Image at {resourcePath}", resourcePath), gameObject);
+            FBDebug.Instance.FBLogError(string.Format("Unable to get Image at {0}", resourcePath), gameObject);
             return null;
         }
     }
