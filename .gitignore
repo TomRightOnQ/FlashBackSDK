@@ -68,3 +68,7 @@ FlashBackSDK/[Pp]ackages/*
 !**/[Pp]ackage[Cc]ache/*
 /Library
 /Logs
+/obj/Debug
+/Logs
+/Temp
+/Assets/TextMesh Pro

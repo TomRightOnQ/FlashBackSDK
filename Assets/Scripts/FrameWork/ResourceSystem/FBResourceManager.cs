@@ -8,20 +8,15 @@ using UnityEngine;
 /// </summary>
 public class FBResourceManager : FBGameSystem
 {
-    public override void OnSystemInit()
-    {
+    public override void OnSystemInit() { }
 
-    }
+    public override void OnSceneUnloaded() { }
 
-    public override void OnSceneChange()
-    {
+    public override void OnSceneChange() { }
 
-    }
+    public override void OnSceneLoadComplete() { }
 
-    public override void ManualInit()
-    {
-
-    }
+    public override void ManualInit() { }
 
     // Public:
     /// <summary>

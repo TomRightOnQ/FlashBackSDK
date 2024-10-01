@@ -59,3 +59,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ScriptPath: Assets/Scripts/UI/
   Layer: 2
+  IsPersistent: 1

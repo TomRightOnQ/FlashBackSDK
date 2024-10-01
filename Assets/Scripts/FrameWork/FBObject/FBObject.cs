@@ -6,6 +6,7 @@ using UnityEngine;
 /// The base object type of the project
 /// Derived from monobehaviours
 /// UUID ready
+/// Only one FBObject is allowed per gameobject; feel free to attach other types of components
 /// </summary>
 public class FBObject : MonoBehaviour
 {

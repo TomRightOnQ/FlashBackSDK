@@ -7,6 +7,9 @@ using UnityEngine;
 /// </summary>
 public class FBUIBase : FBObject
 {
+    // Reference to the FBUICreator component
+    [SerializeField] public FBUICreator config;
+
     // Whether the UI has been opened once
     [SerializeField, ReadOnly] public bool bHasOpenedOnce = false;
     public bool HasOpened => bHasOpenedOnce;

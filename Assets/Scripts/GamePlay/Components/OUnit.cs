@@ -4,6 +4,7 @@ using UnityEngine;
 
 /// <summary>
 /// Base class of Game Entities: Players, enemies...
+/// Anything that can be controlled
 /// </summary>
 public class OUnit : FBObject
 {

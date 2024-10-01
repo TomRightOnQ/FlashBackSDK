@@ -67,9 +67,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -155,6 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72bdbd92285f31e409df69adfe617b73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 3
 --- !u!114 &60884234
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -269,6 +267,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72bdbd92285f31e409df69adfe617b73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 4
 --- !u!114 &351208745
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -327,7 +326,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 80
@@ -383,6 +382,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72bdbd92285f31e409df69adfe617b73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 0
 --- !u!114 &363256576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -579,6 +579,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72bdbd92285f31e409df69adfe617b73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 6
 --- !u!1 &637799838
 GameObject:
   m_ObjectHideFlags: 0
@@ -899,6 +900,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72bdbd92285f31e409df69adfe617b73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 2
 --- !u!114 &1430974007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1081,6 +1083,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72bdbd92285f31e409df69adfe617b73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 5
 --- !u!114 &1622634852
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1195,6 +1198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72bdbd92285f31e409df69adfe617b73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 1
 --- !u!114 &2140076981
 MonoBehaviour:
   m_ObjectHideFlags: 0

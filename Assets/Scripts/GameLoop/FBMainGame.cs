@@ -124,10 +124,24 @@ public class FBMainGame : MonoBehaviour
     }
 
     /// <summary>
+    /// Called before scene change happening
+    /// </summary>
+    public void OnSceneUnloaded()
+    {
+        // Call OnSceneUnloaded for each manager
+        foreach (var manager in gameSystemDictionary.Values)
+        {
+            FBGameSystem gameSystem = manager as FBGameSystem;
+            if (gameSystem != null)
+            {
+                gameSystem.OnSceneUnloaded();
+            }
+        }
+    }
+
+    /// <summary>
     /// Called immediately after scene loaded
     /// </summary>
-    /// <param name="scene"></param>
-    /// <param name="mode"></param>
     public void OnSceneLoaded()
     {
         // Call OnSceneChange for each manager
@@ -137,6 +151,14 @@ public class FBMainGame : MonoBehaviour
             if (gameSystem != null)
             {
                 gameSystem.OnSceneChange();
+            }
+        }
+        foreach (var manager in gameSystemDictionary.Values)
+        {
+            FBGameSystem gameSystem = manager as FBGameSystem;
+            if (gameSystem != null)
+            {
+                gameSystem.OnSceneLoadComplete();
             }
         }
     }

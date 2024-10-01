@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.UI;
+using UnityEditor.SceneManagement;
 
 /// <summary>
 /// FBUIPlugin - MainWindow
@@ -14,6 +15,8 @@ public class FBUICreatorWindow : EditorWindow
     private GameObject selectedAsset;
     [SerializeField] private string scriptPath = "Assets/Scripts/UI/";
     [SerializeField] private UILayer layer = UILayer.Bottom;
+    [SerializeField] private bool bPersistent = false;
+    [SerializeField] private bool bAutoShow = false;
 
     public static void ShowWindow()
     {
@@ -37,24 +40,44 @@ public class FBUICreatorWindow : EditorWindow
     // Define the GUI behavior
     void OnGUI()
     {
-        GUILayout.Label("FBUICreator", EditorStyles.boldLabel);
+        GUILayout.Label(selectedAsset.name, EditorStyles.boldLabel);
+
         scriptPath = EditorGUILayout.TextField("Script Path", scriptPath);
         layer = (UILayer)EditorGUILayout.EnumPopup("UI Layer", layer);
+        bPersistent = EditorGUILayout.Toggle("Persistent on SceneChange", bPersistent);
+        bAutoShow = EditorGUILayout.Toggle("Show after SceneChange", bAutoShow);
 
         // If an asset is selected and it's a GameObject, show the create button
         if (selectedAsset != null)
         {
+            GUILayout.Label("\n", EditorStyles.label);
+            GUILayout.Label("Save settings to the prefab asset", EditorStyles.boldLabel);
             if (GUILayout.Button("Save"))
             {
                 SaveData();
             }
 
-            if (GUILayout.Button("Create/Update Script"))
+            // Check if we are in Prefab Mode
+            PrefabStage prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
+            bool isInPrefabMode = prefabStage != null;
+
+            GUILayout.Label(isInPrefabMode ? "Exit Prefab Mode to Click" : "Generate Script", EditorStyles.boldLabel);
+
+            // Disable the button if in Prefab Mode
+            using (new EditorGUI.DisabledGroupScope(isInPrefabMode))
             {
-                CreateOrUpdateScript();
+                if (GUILayout.Button("Create Script"))
+                {
+                    CreateOrUpdateScript();
+                }
+                if (GUILayout.Button("Write References"))
+                {
+                    WriteAllReferences();
+                }
             }
         }
     }
+
 
     // Assign a FBUIBase to the window
     public void AssignPrefab(FBUICreator fbuiCreator)
@@ -74,6 +97,8 @@ public class FBUICreatorWindow : EditorWindow
             {
                 scriptPath = fbuiCreator.ScriptPath;
                 layer = fbuiCreator.Layer;
+                bPersistent = fbuiCreator.IsPersistent;
+                bAutoShow = fbuiCreator.IsAutoShow;
             }
             else
             {
@@ -92,7 +117,9 @@ public class FBUICreatorWindow : EditorWindow
             if (fbuiCreator != null)
             {
                 fbuiCreator.ScriptPath = scriptPath;
-                fbuiCreator.Layer = layer; 
+                fbuiCreator.Layer = layer;
+                fbuiCreator.IsPersistent = bPersistent;
+                fbuiCreator.IsAutoShow = bAutoShow;
                 EditorUtility.SetDirty(prefabAsset);
             }
             else
@@ -113,7 +140,16 @@ public class FBUICreatorWindow : EditorWindow
     void CreateOrUpdateScript()
     {
         // To update a specific entry in the configuration file
-        UIData newData = new UIData(scriptPath, layer);
-        UIConfigWriter.UpdateOrCreateUIDataEntry(selectedAsset.name, newData);
+        string assetPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(selectedAsset);
+        UIConfigWriter.UpdateOrCreateUIDataEntry(selectedAsset.name, assetPath);
+        UIScriptWriter.CreateScript(selectedAsset.name, scriptPath);
+    }
+
+    /// <summary>
+    /// Scan and wrtie all references by using rules indicated in UIConfig.widgetName
+    /// </summary>
+    void WriteAllReferences()
+    {
+        UIScriptWriter.WriteReferences(selectedAsset.name, scriptPath, selectedAsset);
     }
 }

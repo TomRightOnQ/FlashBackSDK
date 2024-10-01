@@ -20,22 +20,17 @@ public class FBObjectManager : FBGameSystem
     [SerializeField, ReadOnly]
     private long currentUUID = 0;
 
-    public override void OnSystemInit()
-    {
+    public override void OnSystemInit() { }
 
-    }
-
-    public override void ManualInit()
-    {
-
-    }
+    public override void OnSceneUnloaded() { }
 
     public override void OnSceneChange()
     {
-        base.OnSceneChange();
         // Defer clearing and re-registering of objects until after Awake calls
         StartCoroutine(ClearAndRegisterObjects());
     }
+    public override void OnSceneLoadComplete() { }
+    public override void ManualInit() { }
 
     private IEnumerator ClearAndRegisterObjects()
     {

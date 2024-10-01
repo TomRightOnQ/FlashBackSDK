@@ -1,9 +1,9 @@
-using UnityEngine;
 /// <summary>
 /// Universal Attribute for units
 /// Final = (Base + Add) * Pre * Post
 /// Normally we have determined base and add, and only add to temp add value if needed
 /// </summary>
+[System.Serializable]
 public struct UnitAttribute
 {
     // Assign a unique ID to the same type of attribute, such as 1 for HP, 2 for attack

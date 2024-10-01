@@ -9,18 +9,18 @@ public static class UIConfigWriter
 {
     private const string ConfigFilePath = "Assets/Scripts/Contents/Configs/UIConfig.cs";
 
-    public static void UpdateOrCreateUIDataEntry(string prefabName, UIData newData)
+    public static void UpdateOrCreateUIDataEntry(string prefabName, string prefabPath)
     {
        string fileContent = File.ReadAllText(ConfigFilePath);
 
         // Pattern to find the start and end of the data dictionary
-        string dictionaryPattern = @"\s*public static Dictionary<string, UIData> data = new Dictionary<string, UIData>\s*\{\s*(.*?)\s*\};";
+        string dictionaryPattern = @"\s*public static Dictionary<string, string> data = new Dictionary<string, string>\s*\{\s*(.*?)\s*\};";
         Match dictionaryMatch = Regex.Match(fileContent, dictionaryPattern, RegexOptions.Singleline);
 
         if (dictionaryMatch.Success)
         {
             string dictionaryContent = dictionaryMatch.Groups[1].Value;
-            string entryReplacement = $"{{\"{prefabName}\", new UIData(\"{newData.Path}\", UILayer.{newData.Layer})}},";
+            string entryReplacement = $"{{\"{prefabName}\", \"{prefabPath}\"}},";
 
             // If the dictionary is empty, just add the new entry
             if (string.IsNullOrEmpty(dictionaryContent))
@@ -31,7 +31,8 @@ public static class UIConfigWriter
             else
             {
                 // Check if the entry already exists and replace it
-                string entryPattern = $@"\{{\s*""{Regex.Escape(prefabName)}""\s*,\s*new\s+UIData\(.+?\)\s*\}},?";
+                string entryPattern = $@"\{{\s*""{Regex.Escape(prefabName)}""\s*,\s*"".*?""\s*\}},?";
+
                 if (Regex.IsMatch(dictionaryContent, entryPattern))
                 {
                     dictionaryContent = Regex.Replace(dictionaryContent, entryPattern, entryReplacement);

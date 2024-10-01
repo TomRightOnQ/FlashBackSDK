@@ -9,21 +9,23 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class FBLevelSystem : FBGameSystem
 {
-    public override void OnSystemInit()
-    {
+    public override void OnSystemInit() { }
 
+    public override void OnSceneUnloaded() { 
+        // CAREFULLY CHANGE HERE TO AVOID SEQUENTIAL ISSUE
     }
 
-    // DO NOT USE
     public override void OnSceneChange()
     {
-
+        // CAREFULLY CHANGE HERE TO AVOID SEQUENTIAL ISSUE
     }
 
-    public override void ManualInit()
+    public override void OnSceneLoadComplete()
     {
-
+        // CAREFULLY CHANGE HERE TO AVOID SEQUENTIAL ISSUE
     }
+
+    public override void ManualInit() { }
 
     // Public:
     /// <summary>
@@ -40,6 +42,8 @@ public class FBLevelSystem : FBGameSystem
     // Private
     private IEnumerator loadSceneAsync(string sceneName)
     {
+        // Scene Unload
+        FBMainGame.System.OnSceneUnloaded();
         // Start loading the scene
         AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(sceneName);
 

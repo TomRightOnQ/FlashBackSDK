@@ -12,32 +12,62 @@ public class FBUIManager : FBGameSystem
     // All Opened UIs
     private Dictionary<string, FBUIBase> openedUIs = new Dictionary<string, FBUIBase>();
 
-    // Root for UI resources
-    private static string UI_PREFAB_ROOT = "Art/UI";
+    // UICanavses 
+    private Dictionary<UILayer, GameObject> uiLayers = new Dictionary<UILayer, GameObject>();
 
     public override void OnSystemInit()
     {
-
-    }
-
-    public override void OnSceneChange()
-    {
-        // Clear all UIs after scene changed
-        openedUIs.Clear();
-
-        // This will find and potentially register already-open UIs at start, if needed
-        FBUIBase[] allUIBases = FindObjectsByType<FBUIBase>(FindObjectsSortMode.None);
-        foreach (FBUIBase ui in allUIBases)
+        // When Initialize the UIs, first collect the references
+        // of all canvases for different layers
+        FBUICanvas[] uiCanvas = FindObjectsOfType<FBUICanvas>();
+        foreach (var canvas in uiCanvas)
         {
-            openedUIs[ui.name] = ui;
-            // UIData uiData = UIConfig.Instance.GetUIData(ui.name);
+            uiLayers[canvas.Layer] = canvas.gameObject;
         }
     }
 
-    public override void ManualInit()
+    public override void OnSceneUnloaded()
     {
+        // Remove all UIs marked as NON persistent
+        // Create a list to hold the keys of the UIs that are not persistent
+        List<string> keysToRemove = new List<string>();
 
+        // Iterate through the dictionary to find non-persistent UIs
+        foreach (var kvp in openedUIs)
+        {
+            if (!kvp.Value.config.IsPersistent)
+            {
+                RemoveUI(kvp.Key);
+                keysToRemove.Add(kvp.Key);
+            }
+        }
+
+        // Remove the non-persistent UIs from the dictionary
+        foreach (var key in keysToRemove)
+        {
+            openedUIs.Remove(key);
+        }
+
+        // Hide all UIs
+        HideAllUI(false);
     }
+
+    public override void OnSceneChange() { }
+
+    public override void OnSceneLoadComplete()
+    {
+        // Open all currently created UIs marked as AutoShow visible
+        foreach (var kvp in openedUIs)
+        {
+            FBUIBase currentUIInstance = kvp.Value;
+            if (!currentUIInstance.bShowing && currentUIInstance.config.IsAutoShow)
+            {
+                ShowUI(kvp.Key);
+            }
+        }
+    }
+
+    public override void ManualInit() { }
 
     // Public:
     // Life Control
@@ -52,15 +82,7 @@ public class FBUIManager : FBGameSystem
             FBDebug.Instance.FBLog(string.Format("Creating UI {0}", uiName), gameObject);
 
             // Get Path and the reference for the prefab
-            UIData uiData = UIConfig.GetUIData(uiName);
-
-            if (uiData == null || uiData.Path == "None")
-            {
-                FBDebug.Instance.FBLogWarning(string.Format("UI {0} does not exist", uiName), gameObject);
-                return;
-            }
-
-            string resourcePath = Path.Combine(UI_PREFAB_ROOT, uiData.Path);
+            string resourcePath = UIConfig.data[uiName];
             GameObject uiObjectReference = FBMainGame.System.ResourceManager.LoadObject(resourcePath);
             if (uiObjectReference == null)
             {
@@ -71,6 +93,7 @@ public class FBUIManager : FBGameSystem
             // Instantiate the object
             GameObject uiObjectInstance = FBMainGame.System.ObjectManager.Instantiate(uiObjectReference);
             FBUIBase currentUIInstance = uiObjectInstance.GetComponent<FBUIBase>();
+            FBUICreator currentUIConfig = uiObjectInstance.GetComponent<FBUICreator>();
             if (currentUIInstance == null)
             {
                 FBDebug.Instance.FBLogWarning(
@@ -78,6 +101,17 @@ public class FBUIManager : FBGameSystem
                 return;
             }
 
+            // Assign the uiObject to a parent canvas
+            GameObject uiCanvasParent = uiLayers[currentUIConfig.Layer];
+            // uiCanvasParent must not be null
+            if (uiCanvasParent == null)
+            {
+                FBDebug.Instance.FBLogError(
+                    string.Format("UILayer Canvas does not exist for {0}!", uiName), gameObject);
+                return;
+            }
+
+            uiObjectInstance.transform.parent = uiCanvasParent.transform;
             // Add UI to the UI list
             openedUIs[uiName] = currentUIInstance;
             currentUIInstance.OnCreate();
@@ -120,11 +154,13 @@ public class FBUIManager : FBGameSystem
             currentUIInstance.OnOpen();
         }
         currentUIInstance.bShowing = true;
+        currentUIInstance.gameObject.SetActive(true);
         currentUIInstance.OnRefresh();
     }
 
     /// <summary>
     /// Hide a FBUIBase type UI
+    /// This will disable the root gameObject of the UI widget
     /// </summary>
     /// <param name="uiName"> UI Name </param>
     public void HideUI(string uiName)
@@ -143,6 +179,7 @@ public class FBUIManager : FBGameSystem
         }
         currentUIInstance.bShowing = false;
         currentUIInstance.OnHide();
+        currentUIInstance.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -216,6 +253,27 @@ public class FBUIManager : FBGameSystem
     {
         return openedUIs.ContainsKey(uiName) && openedUIs[uiName].bShowing;
     }
+
+    /// <summary>
+    /// Hide all UIs
+    /// </summary>
+    /// <param name="bTriggerOnHide"> Trigger OnHide if marked as true </param>
+    public void HideAllUI(bool bTriggerOnHide)
+    {
+        foreach (var kvp in openedUIs)
+        {
+            FBUIBase currentUIInstance = kvp.Value;
+            if (currentUIInstance.bShowing)
+            {
+                currentUIInstance.bShowing = false;
+                if (bTriggerOnHide)
+                {
+                    currentUIInstance.OnHide();
+                }
+                currentUIInstance.gameObject.SetActive(false);
+            }
+        }
+    }
 }
 
 public enum UILayer
@@ -227,16 +285,4 @@ public enum UILayer
     HUD = 2,
     OnScreen = 1,
     Bottom = 0,
-}
-
-public class UIData
-{
-    public string Path;
-    public UILayer Layer;
-
-    public UIData(string path, UILayer layer)
-    {
-        Path = path;
-        Layer = layer;
-    }
 }
