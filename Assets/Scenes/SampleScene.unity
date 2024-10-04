@@ -630,6 +630,8 @@ MonoBehaviour:
   FBUIManager: {fileID: 0}
   FBLevelSystem: {fileID: 0}
   FBResourceManager: {fileID: 0}
+  FBBattleSystem: {fileID: 0}
+  FBBuffSystem: {fileID: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

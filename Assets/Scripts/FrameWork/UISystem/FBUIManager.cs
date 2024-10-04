@@ -86,7 +86,9 @@ public class FBUIManager : FBGameSystem
             GameObject uiObjectReference = FBMainGame.System.ResourceManager.LoadObject(resourcePath);
             if (uiObjectReference == null)
             {
+#if UNITY_EDITOR || DEBUG
                 FBDebug.Instance.FBLogWarning(string.Format("UI {0} does not exist", uiName), gameObject);
+#endif
                 return;
             }
 
@@ -96,8 +98,10 @@ public class FBUIManager : FBGameSystem
             FBUICreator currentUIConfig = uiObjectInstance.GetComponent<FBUICreator>();
             if (currentUIInstance == null)
             {
+#if UNITY_EDITOR || DEBUG
                 FBDebug.Instance.FBLogWarning(
                     string.Format("UI {0} does not contains a child of FBUIBase, is it a UI?", uiName), gameObject);
+#endif
                 return;
             }
 
@@ -106,8 +110,10 @@ public class FBUIManager : FBGameSystem
             // uiCanvasParent must not be null
             if (uiCanvasParent == null)
             {
+#if UNITY_EDITOR || DEBUG
                 FBDebug.Instance.FBLogError(
                     string.Format("UILayer Canvas does not exist for {0}!", uiName), gameObject);
+#endif
                 return;
             }
 
@@ -118,7 +124,9 @@ public class FBUIManager : FBGameSystem
         }
         else 
         {
+#if UNITY_EDITOR || DEBUG
             FBDebug.Instance.FBLogWarning(string.Format("Try to create a CREATED UI {0}", uiName), gameObject);
+#endif
             return;
         }
     }
@@ -131,13 +139,17 @@ public class FBUIManager : FBGameSystem
     {
         if (!openedUIs.ContainsKey(uiName))
         {
+#if UNITY_EDITOR || DEBUG
             FBDebug.Instance.FBLogWarning(string.Format("Try to show a NULL UI {0}, creating instead", uiName), gameObject);
+#endif
             // Try to create first if not existing
             CreateUI(uiName);
         }
         if (!openedUIs.ContainsKey(uiName))
         {
+#if UNITY_EDITOR || DEBUG
             FBDebug.Instance.FBLogWarning(string.Format("Fail to auto create UI {0}", uiName), gameObject);
+#endif
             return;
         }
         FBDebug.Instance.FBLog(string.Format("Opening UI {0}", uiName), gameObject);
@@ -145,7 +157,9 @@ public class FBUIManager : FBGameSystem
         FBUIBase currentUIInstance = openedUIs[uiName];
         if (currentUIInstance.bShowing)
         {
+#if UNITY_EDITOR || DEBUG
             FBDebug.Instance.FBLogWarning(string.Format("UI {0} is already opened", uiName), gameObject);
+#endif
             return;
         }
         if (!currentUIInstance.bHasOpenedOnce)
@@ -167,14 +181,18 @@ public class FBUIManager : FBGameSystem
     {
         if (!openedUIs.ContainsKey(uiName))
         {
+#if UNITY_EDITOR || DEBUG
             FBDebug.Instance.FBLogWarning(string.Format("Try to hide a NULL UI {0}", uiName), gameObject);
+#endif
             return;
         }
 
         FBUIBase currentUIInstance = openedUIs[uiName];
         if (!currentUIInstance.bShowing)
         {
+#if UNITY_EDITOR || DEBUG
             FBDebug.Instance.FBLogWarning(string.Format("Try to hide a hidden UI {0}", uiName), gameObject);
+#endif
             return;
         }
         currentUIInstance.bShowing = false;
@@ -190,7 +208,9 @@ public class FBUIManager : FBGameSystem
     {
         if (!openedUIs.ContainsKey(uiName))
         {
+#if UNITY_EDITOR || DEBUG
             FBDebug.Instance.FBLogWarning(string.Format("Try to remove a NULL UI {0}", uiName), gameObject);
+#endif
             return;
         }
 
@@ -211,9 +231,11 @@ public class FBUIManager : FBGameSystem
     {
         if (openedUIs.ContainsKey(uiName))
         {
+#if UNITY_EDITOR || DEBUG
             return openedUIs[uiName];
         }
         FBDebug.Instance.FBLogWarning(string.Format("Try to get a NULL UI {0}", uiName), gameObject);
+#endif
         return null;
     }
 
@@ -228,9 +250,11 @@ public class FBUIManager : FBGameSystem
     {
         if (openedUIs.ContainsKey(uiName))
         {
+#if UNITY_EDITOR || DEBUG
             openedUIs[uiName].Invoke(functionName, delay);
         }
         FBDebug.Instance.FBLogWarning(string.Format("Try to Invoke a NULL UI {0}", uiName), gameObject);
+#endif
     }
 
     // Check UI States

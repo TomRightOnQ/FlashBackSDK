@@ -30,10 +30,14 @@ public class FBMainGame : MonoBehaviour
     [SerializeField, ReadOnly] private FBLevelSystem FBLevelSystem;
     public FBLevelSystem LevelSystem => FBLevelSystem;
 
-
     [SerializeField, ReadOnly] private FBResourceManager FBResourceManager;
     public FBResourceManager ResourceManager => FBResourceManager;
 
+    [SerializeField, ReadOnly] private FBBattleSystem FBBattleSystem;
+    public FBBattleSystem BattleSystem => FBBattleSystem;
+
+    [SerializeField, ReadOnly] private FBBuffSystem FBBuffSystem;
+    public FBBuffSystem BuffSystem => FBBuffSystem;
 
     private void Awake()
     {
@@ -90,6 +94,18 @@ public class FBMainGame : MonoBehaviour
         FBLevelSystem = O_FBLevelSystem.AddComponent<FBLevelSystem>();
         gameSystemDictionary["FBLevelSystem"] = FBLevelSystem;
         FBLevelSystem.OnSystemCreate();
+
+        // 6. FBBattleSystem
+        GameObject O_FBBattleSystem = new GameObject("FBBattleSystem");
+        FBBattleSystem = O_FBBattleSystem.AddComponent<FBBattleSystem>();
+        gameSystemDictionary["FBBattleSystem"] = FBBattleSystem;
+        FBBattleSystem.OnSystemCreate();
+
+        //7. FBBuffSystem
+        GameObject O_FBBuffSystem = new GameObject("FBBuffSystem");
+        FBBuffSystem = O_FBBuffSystem.AddComponent<FBBuffSystem>();
+        gameSystemDictionary["FBBuffSystem"] = FBBuffSystem;
+        FBBuffSystem.OnSystemCreate();
 
         bSytemsInited = true;
         FBDebug.Instance.FBMainLog("STEP I COMPLETE");

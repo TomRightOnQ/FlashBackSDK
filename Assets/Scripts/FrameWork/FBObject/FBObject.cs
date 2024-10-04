@@ -40,7 +40,7 @@ public class FBObject : MonoBehaviour
     private void Start(){ }
 
     // Overriden awake manually controlled
-    protected virtual void C_Awake()
+    public virtual void C_Awake()
     {
     
     }

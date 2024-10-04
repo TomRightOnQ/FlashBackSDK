@@ -4,12 +4,9 @@
 /// Normally we have determined base and add, and only add to temp add value if needed
 /// </summary>
 [System.Serializable]
-public struct UnitAttribute
+public class UnitAttribute
 {
-    // Assign a unique ID to the same type of attribute, such as 1 for HP, 2 for attack
-    public string AttributeName;
-    public int AttributeID;
-
+    public UnitAttributeType AttributeType;
     public bool bAttributeLocked;
 
     // BaseValue: Base value of the attribute
@@ -28,8 +25,6 @@ public struct UnitAttribute
     // Default dummy value for unknown cases
     public static readonly UnitAttribute Default = new UnitAttribute
     {
-        AttributeName = "Unknown",
-        AttributeID = -1,
         bAttributeLocked = false,
         BaseValue = 0,
         AdditonalValue = 0,

@@ -1,5 +1,4 @@
 using System.Collections;
-using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,13 +31,30 @@ public class FBObjectManager : FBGameSystem
     public override void OnSceneLoadComplete() { }
     public override void ManualInit() { }
 
+    private void ClearDestroyedObjects()
+    {
+        var keysToRemove = new List<long>();
+        foreach (var kvp in objectDictionary)
+        {
+            if (kvp.Value == null)
+            {
+                keysToRemove.Add(kvp.Key);
+            }
+        }
+
+        foreach (var key in keysToRemove)
+        {
+            objectDictionary.Remove(key);
+        }
+
+        objectSet.RemoveWhere(obj => obj == null);
+    }
+
     private IEnumerator ClearAndRegisterObjects()
     {
-        yield return null; // Wait one frame to allow all Awake calls to complete
+        yield return null;
 
-        objectDictionary.Clear();
-        objectSet.Clear();
-        currentUUID = 0;
+        ClearDestroyedObjects();
 
         // Register all pre-placed FBObjects in the scene
         FBObject[] allFBObjects = FindObjectsOfType<FBObject>();
@@ -82,6 +98,8 @@ public class FBObjectManager : FBGameSystem
             // Assgin UUID
             RegisterObject(FBObjectComponent);
         }
+        // Call the manual awake
+        FBObjectComponent.C_Awake();
         return newObject;
     }
 
@@ -97,6 +115,8 @@ public class FBObjectManager : FBGameSystem
             // Assgin UUID
             RegisterObject(FBObjectComponent);
         }
+        // Call the manual awake
+        FBObjectComponent.C_Awake();
         return newObject;
     }
 

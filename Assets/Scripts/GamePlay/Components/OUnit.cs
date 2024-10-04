@@ -13,24 +13,54 @@ public class OUnit : FBObject
     [SerializeField] protected string unitNameString;
     // Unit ID is not object UUID: The same type of unit shares the same unit ID
     [SerializeField] protected int unitID;
+    // Unit Faction
+    [SerializeField] protected EUnitFaction unitFaction;
 
     // Getters
     public string UnitName => unitName;
     public string UnitNameString => unitNameString;
     public int UnitID => unitID;
+    public EUnitFaction UnitFaction => unitFaction;
 
+    // Attribute List
+    [SerializeField] protected List<UnitAttribute> attributes = new List<UnitAttribute>();
     // Attribute Dictioanry
     // Attribute ID : Attribute Structure
-    protected Dictionary<UnitAttributeType, UnitAttribute> attributeDiectionary 
+    protected Dictionary<UnitAttributeType, UnitAttribute> attributeDictionary
         = new Dictionary<UnitAttributeType, UnitAttribute>();
+
+    // UnitBuffManager
+    [SerializeField] protected CUnitBuffManager buffManager;
+    public CUnitBuffManager BuffManager => buffManager;
 
     /// <summary>
     /// Unit Setters
+    /// <param name="faction"> Faction for this unit </param>
     /// </summary>
-    /// <param name="targetUnitID"> Unit ID </param>
-    public virtual void SetUnit(int targetUnitID)
+    public virtual void SetUnit(EUnitFaction faction)
     {
+        // Copy from the list to the dictionary
+        foreach (UnitAttribute attribute in attributes)
+        {
+            attributeDictionary[attribute.AttributeType] = attribute;
+        }
+        // Init a buffmanager
+        if (buffManager == null)
+        {
+            buffManager = gameObject.AddComponent<CUnitBuffManager>();
+            buffManager.SetReference(this);
+        }
+        // Set Faction
+        unitFaction = faction;
+    }
 
+    /// <summary>
+    /// Change the faction of the unit
+    /// </summary>
+    /// <param name="faction"> Faction of the unit </param>
+    public virtual void ChangeFaction(EUnitFaction faction)
+    {
+        unitFaction = faction;
     }
 
     /// <summary>
@@ -39,7 +69,7 @@ public class OUnit : FBObject
     /// <param name="typeName"> Attribute Enum </param>
     public virtual void AddAttributeToUnit(UnitAttributeType typeName, string attrName, float baseVal)
     {
-        if (!attributeDiectionary.ContainsKey(typeName))
+        if (!attributeDictionary.ContainsKey(typeName))
         {
             return;
         }
@@ -47,8 +77,6 @@ public class OUnit : FBObject
         // Create a new UnitAttribute with the given values
         UnitAttribute attribute = new UnitAttribute
         {
-            AttributeName = attrName,
-            AttributeID = (int)typeName,
             bAttributeLocked = false,
             BaseValue = baseVal,
             AdditonalValue = 0,
@@ -58,7 +86,8 @@ public class OUnit : FBObject
         };
 
         // Add the attribute to the dictionary
-        attributeDiectionary[typeName] = attribute;
+        attributeDictionary[typeName] = attribute;
+        attributes.Add(attribute);
     }
 
     /// <summary>
@@ -68,7 +97,7 @@ public class OUnit : FBObject
     /// <returns></returns>
     public virtual float GetAttributeValue(UnitAttributeType typeName)
     {
-        if (attributeDiectionary.TryGetValue(typeName, out UnitAttribute attribute))
+        if (attributeDictionary.TryGetValue(typeName, out UnitAttribute attribute))
         {
             return attribute.Value;
         }
@@ -85,7 +114,7 @@ public class OUnit : FBObject
     /// <returns> Value of the attribute </returns>
     public virtual UnitAttribute GetAttributeStruct(UnitAttributeType typeName)
     {
-        if (attributeDiectionary.TryGetValue(typeName, out UnitAttribute attribute))
+        if (attributeDictionary.TryGetValue(typeName, out UnitAttribute attribute))
         {
             return attribute;
         }
@@ -106,22 +135,22 @@ public class OUnit : FBObject
     public virtual void SetAttributeDelta(UnitAttributeType typeName, 
         float deltaAddVal, float deltaTempAddVal, float deltaPreMul, float deltaPostMul)
     {
-        if (!attributeDiectionary.ContainsKey(typeName))
+        if (!attributeDictionary.ContainsKey(typeName))
         {
             return;
         }
 
         // Stop if the attribute is locked
-        if (attributeDiectionary[typeName].bAttributeLocked)
+        if (attributeDictionary[typeName].bAttributeLocked)
         {
             return;
         }
 
         // Change the value
-        attributeDiectionary[typeName].ChangeTempAdditonalValue(deltaTempAddVal);
-        attributeDiectionary[typeName].ChangeAdditonalValue(deltaAddVal);
-        attributeDiectionary[typeName].ChangPreMultiplierValue(deltaPreMul);
-        attributeDiectionary[typeName].ChangePostMultiplerValue(deltaPostMul);
+        attributeDictionary[typeName].ChangeTempAdditonalValue(deltaTempAddVal);
+        attributeDictionary[typeName].ChangeAdditonalValue(deltaAddVal);
+        attributeDictionary[typeName].ChangPreMultiplierValue(deltaPreMul);
+        attributeDictionary[typeName].ChangePostMultiplerValue(deltaPostMul);
     }
 
     /// <summary>
@@ -131,10 +160,10 @@ public class OUnit : FBObject
     /// <param name="bAttributeLocked"> True to lock </param>
     public virtual void SetAttributeLocked(UnitAttributeType typeName, bool bAttributeLocked)
     {
-        if (!attributeDiectionary.ContainsKey(typeName))
+        if (!attributeDictionary.ContainsKey(typeName))
         {
             return;
         }
-        attributeDiectionary[typeName].SetAttributeLocked(bAttributeLocked);
+        attributeDictionary[typeName].SetAttributeLocked(bAttributeLocked);
     }
 }
