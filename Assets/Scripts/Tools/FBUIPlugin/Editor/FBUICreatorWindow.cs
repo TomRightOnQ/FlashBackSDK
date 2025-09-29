@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.UI;
 using UnityEditor.SceneManagement;
+using System.IO;
 
 /// <summary>
 /// FBUIPlugin - MainWindow
@@ -139,10 +140,91 @@ public class FBUICreatorWindow : EditorWindow
     /// </summary>
     void CreateOrUpdateScript()
     {
-        // To update a specific entry in the configuration file
-        string assetPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(selectedAsset);
-        UIConfigWriter.UpdateOrCreateUIDataEntry(selectedAsset.name, assetPath);
-        UIScriptWriter.CreateScript(selectedAsset.name, scriptPath);
+        if (selectedAsset == null)
+        {
+            Debug.LogError("No UI prefab selected.");
+            return;
+        }
+
+        // Get the prefab path and extract system folder name
+        string prefabPath = AssetDatabase.GetAssetPath(selectedAsset);
+        string systemFolder = UIScriptWriter.ExtractSystemFolderFromPath(prefabPath);
+
+        if (string.IsNullOrEmpty(systemFolder))
+        {
+            Debug.LogError("Could not determine system folder from prefab path: " + prefabPath);
+            return;
+        }
+
+        // Create script directories if they don't exist
+        string systemScriptPath = $"Assets/Scripts/Gameplay/Systems/{systemFolder}";
+        UIScriptWriter.EnsureDirectoryExists(systemScriptPath);
+
+        string className = selectedAsset.name;
+        string viewClassName = className + "View";
+
+        // Create or update the main UI class (preserves user code)
+        UIScriptWriter.CreateMainUIClass(systemScriptPath, className, viewClassName);
+
+        // Create or regenerate the View class (can be completely rewritten)
+        UIScriptWriter.CreateViewClass(systemScriptPath, viewClassName, selectedAsset);
+
+        // Attach both scripts to the prefab
+        AttachScriptsToPrefab(className, viewClassName, systemFolder);
+
+        AssetDatabase.Refresh();
+        Debug.Log($"Successfully created/updated scripts for {className} in {systemScriptPath}");
+    }
+
+    private void AttachScriptsToPrefab(string className, string viewClassName, string systemFolder)
+    {
+        // Load the main UI script
+        MonoScript mainScript = AssetDatabase.LoadAssetAtPath<MonoScript>($"Assets/Scripts/Gameplay/Systems/{systemFolder}/{className}.cs");
+        MonoScript viewScript = AssetDatabase.LoadAssetAtPath<MonoScript>($"Assets/Scripts/Gameplay/Systems/{systemFolder}/{viewClassName}.cs");
+
+        if (mainScript == null || viewScript == null)
+        {
+            Debug.LogError("Failed to load generated scripts.");
+            return;
+        }
+
+        // Get the prefab instance
+        GameObject prefabInstance = PrefabUtility.InstantiatePrefab(selectedAsset) as GameObject;
+
+        if (prefabInstance == null)
+        {
+            Debug.LogError("Failed to instantiate prefab.");
+            return;
+        }
+
+        // Remove existing components of the same type
+        var existingMain = prefabInstance.GetComponent(className);
+        var existingView = prefabInstance.GetComponent(viewClassName);
+
+        if (existingMain != null) DestroyImmediate(existingMain);
+        if (existingView != null) DestroyImmediate(existingView);
+
+        // Add the new components
+        prefabInstance.AddComponent(mainScript.GetClass());
+        prefabInstance.AddComponent(viewScript.GetClass());
+
+        // Get the FBUIBase component and assign the view reference
+        var uiBase = prefabInstance.GetComponent<FBUIBase>();
+        var viewComponent = prefabInstance.GetComponent(viewScript.GetClass()) as FBUIView;
+
+        if (uiBase != null && viewComponent != null)
+        {
+            // Use reflection to set the SelfWidgets field
+            var field = typeof(FBUIBase).GetField("SelfWidgets");
+            if (field != null)
+            {
+                field.SetValue(uiBase, viewComponent);
+            }
+        }
+
+        // Save changes back to the prefab
+        PrefabUtility.ApplyPrefabInstance(prefabInstance, InteractionMode.UserAction);
+        DestroyImmediate(prefabInstance);
     }
 
     /// <summary>
@@ -150,6 +232,97 @@ public class FBUICreatorWindow : EditorWindow
     /// </summary>
     void WriteAllReferences()
     {
-        UIScriptWriter.WriteReferences(selectedAsset.name, scriptPath, selectedAsset);
+        if (selectedAsset == null)
+        {
+            Debug.LogError("No UI prefab selected.");
+            return;
+        }
+
+        // Get the prefab instance
+        GameObject prefabInstance = PrefabUtility.InstantiatePrefab(selectedAsset) as GameObject;
+
+        if (prefabInstance == null)
+        {
+            Debug.LogError("Failed to instantiate prefab.");
+            return;
+        }
+
+        try
+        {
+            // Get the view component
+            string className = selectedAsset.name;
+            string viewClassName = className + "View";
+            var viewComponent = prefabInstance.GetComponent(viewClassName) as MonoBehaviour;
+
+            if (viewComponent == null)
+            {
+                Debug.LogError($"View component {viewClassName} not found on prefab.");
+                return;
+            }
+
+            // Scan and assign all references
+            ScanAndAssignReferences(prefabInstance.transform, viewComponent);
+
+            // Save changes back to the prefab
+            PrefabUtility.ApplyPrefabInstance(prefabInstance, InteractionMode.UserAction);
+            Debug.Log($"Successfully assigned all UI references for {className}");
+        }
+        finally
+        {
+            DestroyImmediate(prefabInstance);
+        }
+    }
+
+    /// <summary>
+    /// Recursively scans and assigns UI component references
+    /// </summary>
+    private void ScanAndAssignReferences(Transform current, MonoBehaviour viewComponent)
+    {
+        if (current == null) return;
+
+        // Get all components on this GameObject
+        var components = current.GetComponents<Component>();
+
+        foreach (var component in components)
+        {
+            if (component == null) continue;
+
+            string fieldName = UIScriptWriter.MakeValidFieldName(current.name, component);
+            string fieldType = UIScriptWriter.GetComponentTypeName(component);
+
+            if (!string.IsNullOrEmpty(fieldType))
+            {
+                // Use reflection to find and set the field
+                var field = viewComponent.GetType().GetField(fieldName,
+                    System.Reflection.BindingFlags.Public |
+                    System.Reflection.BindingFlags.Instance);
+
+                if (field != null && field.FieldType.IsAssignableFrom(component.GetType()))
+                {
+                    field.SetValue(viewComponent, component);
+                }
+            }
+        }
+
+        // Handle FBUIBase references
+        var childUIBase = current.GetComponent<FBUIBase>();
+        if (childUIBase != null && current != current.root)
+        {
+            string fieldName = UIScriptWriter.MakeValidFieldName(current.name, childUIBase);
+            var field = viewComponent.GetType().GetField(fieldName,
+                System.Reflection.BindingFlags.Public |
+                System.Reflection.BindingFlags.Instance);
+
+            if (field != null && field.FieldType == typeof(FBUIBase))
+            {
+                field.SetValue(viewComponent, childUIBase);
+            }
+        }
+
+        // Recursively scan children
+        for (int i = 0; i < current.childCount; i++)
+        {
+            ScanAndAssignReferences(current.GetChild(i), viewComponent);
+        }
     }
 }

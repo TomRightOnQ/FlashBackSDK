@@ -5,6 +5,8 @@ public static class GameEvent
         // NOTHING
         NONE = 0,
         SCENE_LOAD_BEGIN = 1,
-        SCENE_LOAD_COMPLETE = 2
+        SCENE_LOAD_COMPLETE = 2,
+
+        ON_SERVER_CONNECT = 3
     }
 }

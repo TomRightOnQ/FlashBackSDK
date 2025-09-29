@@ -1,0 +1,25 @@
+{
+  "protocol_version": "1.0",
+  "endpoints": [
+    {
+      "name": "ReqPlayerIndicatorUpdate",
+      "message_type": "indicator",
+      "fields": [
+          {"name": "x", "type": "float"},
+          {"name": "y", "type": "float"},
+          {"name": "id", "type": "int"},
+          {"name": "player_id", "type": "int"}
+      ]
+    },
+    {
+      "name": "OnPlayerIndicatorUpdate",
+      "message_type": "indicator",
+      "fields": [
+          {"name": "x", "type": "float"},
+          {"name": "y", "type": "float"},
+          {"name": "id", "type": "int"},
+          {"name": "player_id", "type": "int"}
+      ]
+    }
+  ]
+}

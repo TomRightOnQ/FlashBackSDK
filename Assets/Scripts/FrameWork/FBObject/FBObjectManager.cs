@@ -97,9 +97,9 @@ public class FBObjectManager : FBGameSystem
         {
             // Assgin UUID
             RegisterObject(FBObjectComponent);
+            // Call the manual awake
+            FBObjectComponent.C_Awake();
         }
-        // Call the manual awake
-        FBObjectComponent.C_Awake();
         return newObject;
     }
 
@@ -185,7 +185,6 @@ public class FBObjectManager : FBGameSystem
         if (objectDictionary.ContainsKey(targetFBObject.ObjectUUID))
         {
             objectDictionary.Remove(targetFBObject.ObjectUUID);
-            return;
         }
         if (objectSet.Contains(targetFBObject))
         {

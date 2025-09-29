@@ -117,7 +117,7 @@ public class FBUIManager : FBGameSystem
                 return;
             }
 
-            uiObjectInstance.transform.parent = uiCanvasParent.transform;
+            uiObjectInstance.transform.SetParent(uiCanvasParent.transform, false);
             // Add UI to the UI list
             openedUIs[uiName] = currentUIInstance;
             currentUIInstance.OnCreate();

@@ -32,7 +32,7 @@ public class FBObject : MonoBehaviour
         if (objectUUID < 0)
         {
             // Call manager to record the object
-            FBMainGame.System.Get<FBObjectManager>().RegisterObject(this);
+            FBMainGame.System.ObjectManager.RegisterObject(this);
         }
     }
 

@@ -7,6 +7,9 @@ using UnityEngine;
 /// </summary>
 public class FBUIBase : FBObject
 {
+    //Reference to the UI's View
+    [SerializeField] public FBUIView SelfWidgets;
+
     // Reference to the FBUICreator component
     [SerializeField] public FBUICreator config;
 
