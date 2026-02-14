@@ -1,0 +1,34 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Editor/PerformanceEditor/FBPerformanceEditorWindowStyles.uss?fileID=7433441132597879392&amp;guid=f2098560e7286324d884d8d4b2ee020c&amp;type=3#FBPerformanceEditorWindowStyles" />
+    <ui:VisualElement class="main-container">
+        <ui:VisualElement name="toolbar" class="toolbar">
+            <ui:Button name="new-button" text="New" class="toolbar-button" />
+            <ui:Button name="open-button" text="Open" class="toolbar-button" />
+            <ui:Button name="save-button" text="Save" enabled="false" class="toolbar-button" />
+            <ui:Button name="close-button" text="Close" enabled="false" class="toolbar-button" />
+            <ui:VisualElement class="toolbar-spacer" />
+            <ui:Label name="scene-title" text="No Scene Loaded" class="scene-title" />
+        </ui:VisualElement>
+        
+        <!-- Main content container for horizontal layout -->
+        <ui:VisualElement class="main-content-horizontal">
+            <ui:VisualElement name="content" class="content-area">
+                <ui:VisualElement name="welcome-screen" class="welcome-screen">
+                    <ui:Label text="Performance Editor" class="welcome-title" />
+                    <ui:Button name="welcome-new-button" text="Create New Scene" class="welcome-button" />
+                    <ui:Button name="welcome-open-button" text="Open Existing Scene" class="welcome-button" />
+                </ui:VisualElement>
+                <ui:VisualElement name="editor-content" class="editor-content">
+                    <ui:TextField name="scene-name-field" label="Scene Name" class="scene-name-field" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            
+            <ui:VisualElement name="track-content" tooltip="Select Track" class="track-content" />
+        </ui:VisualElement>
+        
+        <ui:VisualElement name="loading-overlay" class="loading-overlay">
+            <ui:Label text="Loading..." class="loading-text" />
+            <ui:VisualElement class="loading-spinner" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

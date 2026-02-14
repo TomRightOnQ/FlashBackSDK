@@ -16,7 +16,9 @@ public class FBGameSystem: MonoBehaviour
     public virtual void OnSystemCreate()
     {
         this.tag = "Manager";
+#if !UNITY_EDITOR
         DontDestroyOnLoad(this);
+#endif
     }
 
     /// <summary>

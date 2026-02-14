@@ -1,0 +1,92 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19018fde50846e340882572031bb3448, type: 3}
+  m_Name: NewPerformanceScene
+  m_EditorClassIdentifier: 
+  SceneGUID: 93a51bab-14d4-47da-9861-02adfd536818
+  SceneName: Test
+  PerformanceSectionList:
+  - SectionGUID: 7727bb0f-4050-409e-8b5f-a7bd07697cdf
+    SectionName: Dialogue Section
+    SectionType: 0
+    SectionData: 
+    OutputEvents:
+    - EventType: 0
+      CustomVariables: []
+    - EventType: 0
+      CustomVariables: []
+  - SectionGUID: b61a41c9-1bdc-4ae3-a562-2f8f3e9369d3
+    SectionName: Dialogue Section
+    SectionType: 0
+    SectionData: 
+    OutputEvents:
+    - EventType: 0
+      CustomVariables: []
+    - EventType: 0
+      CustomVariables: []
+  - SectionGUID: 7d7c81a9-65e8-4d8b-a83c-21848d46e977
+    SectionName: Dialogue Section
+    SectionType: 0
+    SectionData: 
+    OutputEvents:
+    - EventType: 0
+      CustomVariables: []
+  - SectionGUID: 2c4a7e7b-f8de-4b80-9b26-4ea07119e40d
+    SectionName: Dialogue Section
+    SectionType: 0
+    SectionData: 
+    OutputEvents:
+    - EventType: 0
+      CustomVariables: []
+  SectionPositions:
+  - SectionGUID: 7727bb0f-4050-409e-8b5f-a7bd07697cdf
+    Position: {x: 129.6, y: 189.6}
+  - SectionGUID: b61a41c9-1bdc-4ae3-a562-2f8f3e9369d3
+    Position: {x: -164.8, y: 227.19998}
+  - SectionGUID: 7d7c81a9-65e8-4d8b-a83c-21848d46e977
+    Position: {x: 161.6, y: 524}
+  - SectionGUID: 2c4a7e7b-f8de-4b80-9b26-4ea07119e40d
+    Position: {x: 308.8, y: 352.8}
+  Connections:
+  - FromSectionGUID: ENTRY_05137ed3-f099-4ce5-b6dd-8d3df3c1ad6c
+    FromPortIndex: 0
+    ToSectionGUID: b61a41c9-1bdc-4ae3-a562-2f8f3e9369d3
+    ToPortIndex: 0
+  - FromSectionGUID: b61a41c9-1bdc-4ae3-a562-2f8f3e9369d3
+    FromPortIndex: 0
+    ToSectionGUID: 7727bb0f-4050-409e-8b5f-a7bd07697cdf
+    ToPortIndex: 0
+  - FromSectionGUID: b61a41c9-1bdc-4ae3-a562-2f8f3e9369d3
+    FromPortIndex: 1
+    ToSectionGUID: 7d7c81a9-65e8-4d8b-a83c-21848d46e977
+    ToPortIndex: 0
+  - FromSectionGUID: 7d7c81a9-65e8-4d8b-a83c-21848d46e977
+    FromPortIndex: 0
+    ToSectionGUID: EXIT_c8e1e3a3-a017-4bb6-858c-780e8f2d7f09
+    ToPortIndex: 1
+  - FromSectionGUID: 7727bb0f-4050-409e-8b5f-a7bd07697cdf
+    FromPortIndex: 0
+    ToSectionGUID: EXIT_c8e1e3a3-a017-4bb6-858c-780e8f2d7f09
+    ToPortIndex: 0
+  - FromSectionGUID: 7727bb0f-4050-409e-8b5f-a7bd07697cdf
+    FromPortIndex: 1
+    ToSectionGUID: 2c4a7e7b-f8de-4b80-9b26-4ea07119e40d
+    ToPortIndex: 0
+  EntryNodePosition: {x: -383.2, y: 227.19998}
+  EntryNodeGUID: ENTRY_05137ed3-f099-4ce5-b6dd-8d3df3c1ad6c
+  ExitNodePosition: {x: 794.4, y: 297.6}
+  ExitNodeGUID: EXIT_c8e1e3a3-a017-4bb6-858c-780e8f2d7f09
+  ExitNodeInputs:
+  - ExpectedEventType: 0
+    RequiredVariables: []
+  - ExpectedEventType: 0
+    RequiredVariables: []

@@ -216,6 +216,9 @@ public class {viewClassName} : FBUIView
         if (componentType == typeof(Animator)) return "Animator";
         if (componentType == typeof(Animation)) return "Animation";
 
+        // MarkedUIs 
+        if (componentType == typeof(FBMarkedUI)) return "GameObject";
+
         return null; // Skip non-UI components
     }
 
@@ -278,6 +281,12 @@ public class {viewClassName} : FBUIView
 
         Type componentType = component.GetType();
 
+        // Always return type for FBMarkedUI
+        if (componentType == typeof(FBMarkedUI))
+        {
+            return typeof(GameObject).FullName;
+        }
+
         // Check if it's a UI component we care about
         if (GetFieldTypeForComponent(component) != null)
         {
@@ -320,6 +329,8 @@ public class {viewClassName} : FBUIView
         if (componentType == typeof(Animator)) return "Animator";
         if (componentType == typeof(Animation)) return "Animation";
         if (componentType == typeof(FBUIBase)) return "UI";
+        // MarkedUIs
+        if (componentType == typeof(FBMarkedUI)) return "UINode";
 
         return "Component"; // Generic fallback
     }

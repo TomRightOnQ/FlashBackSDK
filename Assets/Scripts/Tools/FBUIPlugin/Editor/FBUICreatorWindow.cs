@@ -288,18 +288,30 @@ public class FBUICreatorWindow : EditorWindow
             if (component == null) continue;
 
             string fieldName = UIScriptWriter.MakeValidFieldName(current.name, component);
-            string fieldType = UIScriptWriter.GetComponentTypeName(component);
 
-            if (!string.IsNullOrEmpty(fieldType))
+            // Check if it's a UI component we care about
+            string fieldType = UIScriptWriter.GetComponentTypeName(component);
+            bool isMarkedUI = component.GetType() == typeof(FBMarkedUI);
+
+            if (!string.IsNullOrEmpty(fieldType) || isMarkedUI)
             {
                 // Use reflection to find and set the field
                 var field = viewComponent.GetType().GetField(fieldName,
                     System.Reflection.BindingFlags.Public |
                     System.Reflection.BindingFlags.Instance);
 
-                if (field != null && field.FieldType.IsAssignableFrom(component.GetType()))
+                if (field != null)
                 {
-                    field.SetValue(viewComponent, component);
+                    // For FBMarkedUI, assign the GameObject instead of the component
+                    if (isMarkedUI && field.FieldType == typeof(GameObject))
+                    {
+                        field.SetValue(viewComponent, component.gameObject);
+                    }
+                    // For regular components, check type compatibility
+                    else if (field.FieldType.IsAssignableFrom(component.GetType()))
+                    {
+                        field.SetValue(viewComponent, component);
+                    }
                 }
             }
         }
