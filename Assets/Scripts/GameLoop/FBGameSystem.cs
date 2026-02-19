@@ -10,7 +10,7 @@ public class FBGameSystem: MonoBehaviour
 {
     // Timer
     // Systems are alive through the entire gameplay so we don't need to clean timers up
-    private FBTimerUser timerUser;
+    protected FBTimerUser timerUser;
 
     /// Life Cycle
     /// <summary>

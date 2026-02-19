@@ -26,6 +26,11 @@ public class FBTimerUser
         return FBMainGame.System.TimerSystem.AddTimer(timeInterval, invokeNums, caller, callback);
     }
 
+    public int AddTickTimer(int invokeNums, FBTimerUser caller, Action callback)
+    {
+        return FBMainGame.System.TimerSystem.AddTickTimer(invokeNums, caller, callback);
+    }
+
     // Add Timer = back from the system
     public void RegisterTimer(int timerId)
     {

@@ -16,7 +16,7 @@ public class FBObject : MonoBehaviour
     public long ObjectUUID => objectUUID;
 
     // Timer
-    private FBTimerUser timerUser;
+    protected FBTimerUser timerUser;
 
     /// <summary>
     /// Constructor of the object
