@@ -15,6 +15,9 @@ public class FBObject : MonoBehaviour
     private long objectUUID = -1;
     public long ObjectUUID => objectUUID;
 
+    // Timer
+    private FBTimerUser timerUser;
+
     /// <summary>
     /// Constructor of the object
     /// </summary>
@@ -52,5 +55,18 @@ public class FBObject : MonoBehaviour
     public void SetFBObjectUUID(long newID)
     {
         objectUUID = newID;
+    }
+
+    /// <summary>
+    /// Clean up
+    /// </summary>
+    private void OnDestroy()
+    {
+        if (timerUser != null)
+        {
+            // Clean up timers when object is destroyed
+            timerUser.OnObjectDestroyed();
+            timerUser = null;
+        }
     }
 }

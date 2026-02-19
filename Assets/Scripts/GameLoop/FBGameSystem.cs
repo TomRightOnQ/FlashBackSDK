@@ -8,6 +8,10 @@ using UnityEngine;
 
 public class FBGameSystem: MonoBehaviour 
 {
+    // Timer
+    // Systems are alive through the entire gameplay so we don't need to clean timers up
+    private FBTimerUser timerUser;
+
     /// Life Cycle
     /// <summary>
     /// The begining code of the system
@@ -16,6 +20,7 @@ public class FBGameSystem: MonoBehaviour
     public virtual void OnSystemCreate()
     {
         this.tag = "Manager";
+        timerUser = new FBTimerUser(this);
 #if !UNITY_EDITOR
         DontDestroyOnLoad(this);
 #endif

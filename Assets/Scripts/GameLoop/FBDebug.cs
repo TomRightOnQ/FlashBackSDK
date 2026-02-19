@@ -44,12 +44,16 @@ public class FBDebug : MonoBehaviour
     /// </summary>
     /// <param name="logString"> The class you make this call </param>
     /// <param name="caller"> Log content </param>
-    public void FBLog(string logString, GameObject caller)
+    public void FBLog(string logString, GameObject caller = null)
     {
-        if (shouldLog(caller, LOG_NORMAL))
+        if (caller != null)
         {
             string outPut = $"FEDebug: {caller.GetType()}: {logString}";
             Debug.Log(outPut);
+        }
+        else
+        {
+            Debug.Log(logString);
         }
     }
 
@@ -58,12 +62,19 @@ public class FBDebug : MonoBehaviour
     /// </summary>
     /// <param name="logString"> The class you make this call </param>
     /// <param name="caller"> Log Warning content </param>
-    public void FBLogWarning(string logString, GameObject caller)
+    public void FBLogWarning(string logString, GameObject caller = null)
     {
         if (shouldLog(caller, LOG_WARNING))
         {
-            string outPut = $"FEDebug: {caller.GetType()}: {logString}";
-            Debug.LogWarning(outPut);
+            if (caller != null)
+            {
+                string outPut = $"FEDebug: {caller.GetType()}: {logString}";
+                Debug.LogWarning(outPut);
+            }
+            else
+            {
+                Debug.LogWarning(logString);
+            }
         }
     }
 
@@ -72,12 +83,19 @@ public class FBDebug : MonoBehaviour
     /// </summary>
     /// <param name="logString"> The class you make this call </param>
     /// <param name="caller"> Log Error content </param>
-    public void FBLogError(string logString, GameObject caller)
+    public void FBLogError(string logString, GameObject caller = null)
     {
         if (shouldLog(caller, LOG_ERROR))
         {
-            string outPut = $"FEDebug: {caller.GetType()}: {logString}";
-            Debug.LogError(outPut);
+            if (caller != null)
+            {
+                string outPut = $"FEDebug: {caller.GetType()}: {logString}";
+                Debug.LogError(outPut);
+            }
+            else 
+            {
+                Debug.LogError(logString);
+            }
         }
     }
 

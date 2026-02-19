@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// FlackBackSDK MANAGER
-/// Manager the loading and life cycle of scenes and levels
+/// Manage the loading and life cycle of scenes and levels
 /// </summary>
 public class FBLevelSystem : FBGameSystem
 {

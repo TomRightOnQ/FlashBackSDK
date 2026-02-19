@@ -29,6 +29,9 @@ public partial class FBMainGame
     [SerializeField, ReadOnly] private FBNetworkManager FBNetworkManager;
     public FBNetworkManager NetworkManager => FBNetworkManager;
 
+    [SerializeField, ReadOnly] private FBTimerSystem FBTimerSystem;
+    public FBTimerSystem TimerSystem => FBTimerSystem;
+
     private void CreateSystem()
     {
         // 1. FBResourceManager
@@ -78,5 +81,11 @@ public partial class FBMainGame
         FBNetworkManager = O_FBNetworkManager.AddComponent<FBNetworkManager>();
         gameSystemDictionary["FBNetworkManager"] = FBNetworkManager;
         FBNetworkManager.OnSystemCreate();
+
+        // 9. FBTimerSystem
+        GameObject O_FBTimerSystem = new GameObject("FBTimerSystem");
+        FBTimerSystem = O_FBTimerSystem.AddComponent<FBTimerSystem>();
+        gameSystemDictionary["FBTimerSystem"] = FBTimerSystem;
+        FBTimerSystem.OnSystemCreate();
     }
 }
