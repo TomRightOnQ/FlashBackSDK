@@ -1,0 +1,21 @@
+---
+description: Portability-first guidance for the FlashBack Unity project
+alwaysApply: true
+---
+
+# FlashBack Portability Rules
+
+- Use the layer model as the default decision tool:
+  - `Assets/Scripts/FlashBack`: reusable product-capital candidates.
+  - `Assets/Scripts/Framework`: project composition, shared conventions, and reusable-with-adapter systems.
+  - `Assets/Scripts/Gameplay`: rules, content, and feature-specific logic.
+  - `Assets/Editor/FlashBack` plus editor folders under tools: editor-only tooling.
+- Dependency direction is `Gameplay -> Framework -> FlashBack`. Runtime code must not depend on editor-only APIs.
+- Treat `Assets/Scripts/Framework/GameLoop/FBMainGame.cs` and `Assets/Scripts/Framework/Contents/Configs/SystemConfig.cs` as the composition root, not as the reusable SDK itself.
+- A module is only `FlashBack`-level when it can survive another project's boot process with minimal contract changes.
+- Before promoting a module into `FlashBack`, document its responsibility, dependencies, and blockers in `Docs/Architecture`.
+- Prefer recurring cross-project patterns as product capital: lifecycle, event bus, UI model, resource abstraction, scene flow, and config-driven composition.
+- Keep game-specific enums, content catalogs, feature flows, and protocol glue out of `FlashBack`.
+- Prefer updating docs in `Docs/Architecture` and `Docs/ADR` for durable knowledge; `Markdowns` is scratch space only.
+- Use comments sparingly and only for intent or non-obvious decisions.
+
